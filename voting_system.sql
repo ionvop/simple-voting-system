@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2024 at 03:16 AM
+-- Generation Time: Oct 16, 2024 at 04:51 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -25,31 +25,219 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procClearVotes` (IN `p_user_id` INT, IN `p_room_id` INT)   DELETE `tblvotes`
+FROM `tblvotes`
+JOIN `tblcandidates` ON `tblvotes`.`candidate_id` = `tblcandidates`.`id`
+JOIN `tblroles` ON `tblcandidates`.`role_id` = `tblroles`.`id`
+WHERE `tblvotes`.`user_id` = `p_user_id`
+AND `tblroles`.`room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procCreateRoom` (IN `p_name` VARCHAR(50), IN `p_author` INT, IN `p_code` VARCHAR(50))   BEGIN
+    DECLARE `v_room_id` INT;
+
+    INSERT INTO `tblrooms`(`name`, `author`, `code`)
+    VALUES(`p_name`, `p_author`, `p_code`);
+
+    SELECT LAST_INSERT_ID() INTO `v_room_id`;
+
+	INSERT INTO `tblroles`(`title`, `room_id`)
+    VALUES('President', `v_room_id`);
+    
+    INSERT INTO `tblpartylists`(`name`, `room_id`)
+    VALUES('Independent', `v_room_id`);
+    
+    SELECT `v_room_id`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procDeleteCandidateById` (IN `p_candidate_id` INT)   DELETE FROM `tblcandidates`
+WHERE `id` = `p_candidate_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procDeletePartylistById` (IN `p_partylist_id` INT)   DELETE FROM `tblpartylists`
+WHERE `id` = `p_partylist_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procDeleteRoleById` (IN `p_role_id` INT)   DELETE FROM `tblroles`
+WHERE `id` = `p_role_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procDeleteRoomById` (IN `p_room_id` INT)   DELETE FROM `tblrooms`
+WHERE `id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procFinalizeVote` (IN `p_user_id` INT, IN `p_room_id` INT)   UPDATE `tbljoined_rooms`
+SET `is_done` = 1
+WHERE `user_id` = `p_user_id`
+AND `room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procInsertCandidate` (IN `p_user_id` INT, IN `p_room_id` INT, IN `p_role_id` INT, IN `p_partylist_id` INT)   INSERT INTO `tblcandidates`(`user_id`, `room_id`, `role_id`, `partylist_id`)
+VALUES(`p_user_id`, `p_room_id`, `p_role_id`, `p_partylist_id`)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procInsertPartylist` (IN `p_name` VARCHAR(50), IN `p_room_id` INT)   INSERT INTO `tblpartylists`(`name`, `room_id`)
+VALUES(`p_name`, `p_room_id`)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procInsertRole` (IN `p_title` VARCHAR(50), IN `p_room_id` INT)   INSERT INTO `tblroles`(`title`, `room_id`)
+VALUES(`p_title`, `p_room_id`)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procJoinRoomByCode` (IN `p_user_id` INT, IN `p_code` INT)   BEGIN
+    DECLARE `v_room_id` INT;
+
+    SELECT `id` INTO `v_room_id`
+    FROM `tblrooms`
+    WHERE `code` = `p_code`;
+
+    IF `v_room_id` IS NOT NULL THEN
+        INSERT INTO `tbljoined_rooms`(`user_id`, `room_id`)
+        VALUES(`p_user_id`, `v_room_id`);
+    END IF;
+    
+    SELECT `v_room_id`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procLeaveRoom` (IN `p_user_id` INT, IN `p_room_id` INT)   DELETE FROM `tbljoined_rooms`
+WHERE `user_id` = `p_user_id`
+AND `room_id` = `p_room_id`$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procLogin` (IN `p_username` VARCHAR(50), IN `p_password` VARCHAR(50))   SELECT `id`
 FROM `tblusers`
 WHERE `username` = `p_username`
 AND `password` = `p_password`
 LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `procRegister` (IN `p_firstname` VARCHAR(50), IN `p_lastname` VARCHAR(50), IN `p_username` VARCHAR(50), IN `p_password` VARCHAR(50), IN `p_email` VARCHAR(50), IN `p_phone` VARCHAR(50))   INSERT INTO `tblusers`(`firstname`, `lastname`, `username`, `password`, `email`, `phone`)
-VALUES(`p_firstname`, `p_lastname`, `p_username`, `p_password`, `p_email`, `p_phone`)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procPrintResults` (IN `p_room_id` INT)   SELECT 
+`tblroles`.`title` AS `role_title`,
+CONCAT(`tblusers`.`firstname`, ' ', `tblusers`.`lastname`, ' (', `tblusers`.`username`, ')') AS `candidate_user_id`,
+COUNT(`tblvotes`.id) AS `total_votes`
+FROM `tblroles`
+JOIN `tblcandidates` ON `tblroles`.`id` = `tblcandidates`.`role_id`
+LEFT JOIN `tblvotes` ON `tblcandidates`.`id` = `tblvotes`.`candidate_id`
+LEFT JOIN `tblusers` ON `tblcandidates`.`user_id` = `tblusers`.`id`
+WHERE `tblroles`.`room_id` = `p_room_id`
+GROUP BY `tblroles`.`id`, `tblroles`.`title`, `tblcandidates`.`user_id`
+ORDER BY `tblroles`.`id`, `total_votes` DESC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procRegister` (IN `p_firstname` VARCHAR(50), IN `p_lastname` VARCHAR(50), IN `p_username` VARCHAR(50), IN `p_password` VARCHAR(50), IN `p_email` VARCHAR(50), IN `p_phone` VARCHAR(50))   BEGIN
+INSERT INTO `tblusers`(`firstname`, `lastname`, `username`, `password`, `email`, `phone`)
+VALUES(`p_firstname`, `p_lastname`, `p_username`, `p_password`, `p_email`, `p_phone`);
+SELECT LAST_INSERT_ID();
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectCandidateById` (IN `p_candidate_id` INT)   SELECT *
+FROM `tblcandidates`
+WHERE `id` = `p_candidate_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectCandidatesByRoomIdRoleIdAndPartylistId` (IN `p_room_id` INT, IN `p_role_id` INT, IN `p_partylist_id` INT)   SELECT `tblcandidates`.*, `tblusers`.`firstname`, `tblusers`.`lastname`, `tblusers`.`username`
+FROM `tblcandidates`
+LEFT JOIN `tblusers` ON `tblcandidates`.`user_id` = `tblusers`.`id`
+WHERE `room_id` = `p_room_id`
+AND `role_id` = `p_role_id`
+AND `partylist_id` = `p_partylist_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectModeratorsByRoomId` (IN `p_room_id` INT)   SELECT `tblusers`.*
+FROM `tblusers`
+LEFT JOIN `tbljoined_rooms` ON `tbljoined_rooms`.`user_id` = `tblusers`.`id`
+WHERE `tbljoined_rooms`.`room_id` = `p_room_id`
+AND `tbljoined_rooms`.`is_moderator` = 1$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectPartylistsByRoomId` (IN `p_room_id` INT)   SELECT *
+FROM `tblpartylists`
+WHERE `room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectRolesByRoomId` (IN `p_room_id` INT)   SELECT *
+FROM `tblroles`
+WHERE `room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectRoomById` (IN `p_room_id` INT)   SELECT *
+FROM `tblrooms`
+WHERE `id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectRoomsByAuthor` (IN `p_user_id` INT)   SELECT *
+FROM `tblrooms`
+WHERE `author` = `p_user_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectRoomsByUserId` (IN `p_user_id` INT)   BEGIN
+    SELECT `tblrooms`.*
+    FROM `tblrooms`
+    LEFT JOIN `tbljoined_rooms` ON `tblrooms`.`id` = `tbljoined_rooms`.`room_id`
+    WHERE `tbljoined_rooms`.`user_id` = `p_user_id`;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectUserById` (IN `p_user_id` INT)   SELECT *
 FROM `tblusers`
-WHERE `id` = `p_user_id`
-LIMIT 1$$
+WHERE `id` = `p_user_id`$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateUserById` (IN `p_user_id` INT, IN `p_firstname` VARCHAR(50), IN `p_lastname` VARCHAR(50), IN `p_username` VARCHAR(50), IN `p_email` VARCHAR(50), IN `p_phone` VARCHAR(50))   UPDATE `tblusers`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectUserCandidatesByRoomId` (IN `p_room_id` INT)   SELECT `tblcandidates`.*, `tblusers`.`firstname`, `tblusers`.`lastname`, `tblusers`.`username`
+FROM `tblcandidates`
+LEFT JOIN `tblusers` ON `tblcandidates`.`user_id` = `tblusers`.`id`
+WHERE `tblcandidates`.`room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectUsersByRoomId` (IN `p_room_id` INT)   BEGIN
+	SELECT `tblusers`.*, `tbljoined_rooms`.`is_done`
+    FROM `tblusers`
+    JOIN `tbljoined_rooms` ON `tblusers`.`id` = `tbljoined_rooms`.`user_id`
+    WHERE `tbljoined_rooms`.`room_id` = `p_room_id`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSelectUserVotes` (IN `p_user_id` INT, IN `p_room_id` INT)   SELECT 
+`tblroles`.`id`,
+`tblcandidates`.`user_id`
+FROM `tblvotes`
+JOIN `tblcandidates` ON `tblvotes`.`candidate_id` = `tblcandidates`.`id`
+JOIN `tblroles` ON `tblcandidates`.`role_id` = `tblroles`.`id`
+WHERE `tblvotes`.`user_id` = `p_user_id`
+AND `tblroles`.`room_id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSetModerator` (IN `p_user_id` INT, IN `p_room_id` INT, IN `p_is_moderator` INT)   BEGIN
+
+DELETE FROM `tbljoined_rooms`
+WHERE `user_id` = `p_user_id`
+AND `room_id` = `p_room_id`;
+
+INSERT INTO `tbljoined_rooms`(`user_id`, `room_id`, `is_moderator`)
+VALUES(`p_user_id`, `p_room_id`, `p_is_moderator`);
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateCandidateById` (IN `p_candidate_id` INT, IN `p_role_id` INT, IN `p_partylist_id` INT)   UPDATE `tblcandidates`
+SET `role_id` = `p_role_id`,
+`partylist_id` = `p_partylist_id`
+WHERE `id` = `p_candidate_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateRoomById` (IN `p_room_id` INT, IN `p_name` VARCHAR(50), IN `p_code` VARCHAR(50))   UPDATE `tblrooms`
+SET `name` = `p_name`,
+`code` = `p_code`
+WHERE `id` = `p_room_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateUserById` (IN `p_user_id` INT, IN `p_firstname` VARCHAR(50), IN `p_lastname` VARCHAR(50), IN `p_username` VARCHAR(50), IN `p_email` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_voters_id` VARCHAR(50))   UPDATE `tblusers`
 SET `firstname` = `p_firstname`,
 `lastname` = `p_lastname`,
 `username` = `p_username`,
 `email` = `p_email`,
-`phone` = `p_phone`
+`phone` = `p_phone`,
+`voters_id` = `p_voters_id`
 WHERE `id` = `p_user_id`$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateUserPasswordById` (IN `p_user_id` INT, IN `p_username` VARCHAR(50))   UPDATE `tblusers`
 SET `password` = `p_password`
 WHERE `id` = `p_user_id`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procVote` (IN `p_user_id` INT, IN `p_candidate_id` INT)   BEGIN
+DECLARE `v_role_id` INT;
+DECLARE `v_room_id` INT;
+
+SELECT `role_id`, `room_id`
+INTO `v_role_id`, `v_room_id`
+FROM `tblcandidates`
+WHERE `id` = `p_candidate_id`;
+
+DELETE `tblvotes`
+FROM `tblvotes`
+JOIN `tblcandidates` ON `tblvotes`.`candidate_id` = `tblcandidates`.`id`
+JOIN `tblroles` ON `tblcandidates`.role_id = `tblroles`.id
+WHERE `tblvotes`.`user_id` = `p_user_id`
+AND `tblroles`.`room_id` = `v_room_id`
+AND `tblroles`.`id` = `v_role_id`;
+
+INSERT INTO `tblvotes`(`user_id`, `candidate_id`)
+VALUES(`p_user_id`, `p_candidate_id`);
+
+END$$
 
 DELIMITER ;
 
@@ -68,6 +256,13 @@ CREATE TABLE `tblcandidates` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblcandidates`
+--
+
+INSERT INTO `tblcandidates` (`id`, `user_id`, `room_id`, `role_id`, `partylist_id`, `date`) VALUES
+(5, 1, 16, 19, 17, '2024-10-16 14:43:57');
+
 -- --------------------------------------------------------
 
 --
@@ -78,21 +273,19 @@ CREATE TABLE `tbljoined_rooms` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL,
+  `is_moderator` tinyint(1) NOT NULL,
+  `is_done` tinyint(1) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `tblmoderators`
+-- Dumping data for table `tbljoined_rooms`
 --
 
-CREATE TABLE `tblmoderators` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `room_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `tbljoined_rooms` (`id`, `user_id`, `room_id`, `is_moderator`, `is_done`, `date`) VALUES
+(6, 1, 9, 0, 1, '2024-10-16 04:53:58'),
+(10, 2, 9, 0, 0, '2024-10-16 12:09:32'),
+(11, 1, 16, 0, 0, '2024-10-16 14:43:46');
 
 -- --------------------------------------------------------
 
@@ -107,6 +300,13 @@ CREATE TABLE `tblpartylists` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblpartylists`
+--
+
+INSERT INTO `tblpartylists` (`id`, `name`, `room_id`, `date`) VALUES
+(17, 'Independent', 16, '2024-10-16 14:43:20');
+
 -- --------------------------------------------------------
 
 --
@@ -119,6 +319,13 @@ CREATE TABLE `tblroles` (
   `room_id` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblroles`
+--
+
+INSERT INTO `tblroles` (`id`, `title`, `room_id`, `date`) VALUES
+(19, 'President', 16, '2024-10-16 14:43:20');
 
 -- --------------------------------------------------------
 
@@ -134,6 +341,13 @@ CREATE TABLE `tblrooms` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblrooms`
+--
+
+INSERT INTO `tblrooms` (`id`, `name`, `author`, `code`, `date`) VALUES
+(16, 'New Room', 1, '37154', '2024-10-16 14:43:20');
+
 -- --------------------------------------------------------
 
 --
@@ -148,7 +362,7 @@ CREATE TABLE `tblusers` (
   `password` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `phone` varchar(50) NOT NULL,
-  `voters_id` varchar(50) DEFAULT NULL,
+  `voters_id` varchar(50) NOT NULL,
   `is_verified` tinyint(1) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -158,8 +372,9 @@ CREATE TABLE `tblusers` (
 --
 
 INSERT INTO `tblusers` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `voters_id`, `is_verified`, `date`) VALUES
-(1, 'Ionvop', 'Omadle', 'ionvop', '177013', 'ionvop@gmail.com', '09123456789', NULL, 0, '2024-10-10 15:32:51'),
-(2, 'Chiyu', 'Tamade', 'chu2', '177013', 'chu2@gmail.com', '09123456789', NULL, 0, '2024-10-10 17:06:32');
+(1, 'Ionvop', 'Omadle', 'ionvop', '177013', 'ionvop@gmail.com', '09123456789', '', 0, '2024-10-10 15:32:51'),
+(2, 'Chiyu', 'Tamade', 'chu2', '177013', 'chu2@gmail.com', '09123456789', '', 0, '2024-10-10 17:06:32'),
+(4, 'qwe', 'qwe', 'qwe', 'qwer', 'qwe', 'qwe', '', 0, '2024-10-15 07:35:01');
 
 -- --------------------------------------------------------
 
@@ -173,6 +388,13 @@ CREATE TABLE `tblvotes` (
   `candidate_id` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblvotes`
+--
+
+INSERT INTO `tblvotes` (`id`, `user_id`, `candidate_id`, `date`) VALUES
+(7, 1, 5, '2024-10-16 14:46:37');
 
 --
 -- Indexes for dumped tables
@@ -193,14 +415,6 @@ ALTER TABLE `tblcandidates`
 --
 ALTER TABLE `tbljoined_rooms`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `tblmoderators`
---
-ALTER TABLE `tblmoderators`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `room_id` (`room_id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `tblpartylists`
@@ -247,49 +461,43 @@ ALTER TABLE `tblvotes`
 -- AUTO_INCREMENT for table `tblcandidates`
 --
 ALTER TABLE `tblcandidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbljoined_rooms`
 --
 ALTER TABLE `tbljoined_rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblmoderators`
---
-ALTER TABLE `tblmoderators`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tblpartylists`
 --
 ALTER TABLE `tblpartylists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `tblroles`
 --
 ALTER TABLE `tblroles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `tblrooms`
 --
 ALTER TABLE `tblrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tblvotes`
 --
 ALTER TABLE `tblvotes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -303,13 +511,6 @@ ALTER TABLE `tblcandidates`
   ADD CONSTRAINT `tblcandidates_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `tblroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tblcandidates_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `tblrooms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tblcandidates_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `tblmoderators`
---
-ALTER TABLE `tblmoderators`
-  ADD CONSTRAINT `tblmoderators_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `tblrooms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `tblmoderators_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblpartylists`
