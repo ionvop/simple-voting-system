@@ -63,14 +63,14 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new Point(20, 20);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(200, 380);
+            groupBox1.Size = new Size(240, 380);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Login";
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(40, 200);
+            btnLogin.Location = new Point(120, 260);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(75, 23);
             btnLogin.TabIndex = 1;
@@ -80,23 +80,23 @@
             // 
             // txtLoginPassword
             // 
-            txtLoginPassword.Location = new Point(40, 140);
+            txtLoginPassword.Location = new Point(40, 180);
             txtLoginPassword.Name = "txtLoginPassword";
-            txtLoginPassword.Size = new Size(100, 23);
+            txtLoginPassword.Size = new Size(160, 23);
             txtLoginPassword.TabIndex = 2;
             txtLoginPassword.UseSystemPasswordChar = true;
             // 
             // txtLoginUsername
             // 
-            txtLoginUsername.Location = new Point(40, 60);
+            txtLoginUsername.Location = new Point(40, 80);
             txtLoginUsername.Name = "txtLoginUsername";
-            txtLoginUsername.Size = new Size(100, 23);
+            txtLoginUsername.Size = new Size(160, 23);
             txtLoginUsername.TabIndex = 2;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(40, 120);
+            label2.Location = new Point(40, 160);
             label2.Name = "label2";
             label2.Size = new Size(57, 15);
             label2.TabIndex = 1;
@@ -105,7 +105,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(40, 40);
+            label1.Location = new Point(40, 60);
             label1.Name = "label1";
             label1.Size = new Size(60, 15);
             label1.TabIndex = 1;
@@ -128,16 +128,16 @@
             groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(label4);
             groupBox2.Controls.Add(txtRegisterFirstname);
-            groupBox2.Location = new Point(240, 20);
+            groupBox2.Location = new Point(300, 20);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(340, 380);
+            groupBox2.Size = new Size(440, 380);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "Register";
             // 
             // btnRegister
             // 
-            btnRegister.Location = new Point(180, 300);
+            btnRegister.Location = new Point(320, 300);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(75, 23);
             btnRegister.TabIndex = 1;
@@ -156,45 +156,45 @@
             // 
             // txtRegisterRepassword
             // 
-            txtRegisterRepassword.Location = new Point(180, 220);
+            txtRegisterRepassword.Location = new Point(240, 220);
             txtRegisterRepassword.Name = "txtRegisterRepassword";
-            txtRegisterRepassword.Size = new Size(100, 23);
+            txtRegisterRepassword.Size = new Size(160, 23);
             txtRegisterRepassword.TabIndex = 2;
             txtRegisterRepassword.UseSystemPasswordChar = true;
             // 
             // txtRegisterPassword
             // 
-            txtRegisterPassword.Location = new Point(180, 140);
+            txtRegisterPassword.Location = new Point(240, 140);
             txtRegisterPassword.Name = "txtRegisterPassword";
-            txtRegisterPassword.Size = new Size(100, 23);
+            txtRegisterPassword.Size = new Size(160, 23);
             txtRegisterPassword.TabIndex = 2;
             txtRegisterPassword.UseSystemPasswordChar = true;
             // 
             // txtRegisterUsername
             // 
-            txtRegisterUsername.Location = new Point(180, 60);
+            txtRegisterUsername.Location = new Point(240, 60);
             txtRegisterUsername.Name = "txtRegisterUsername";
-            txtRegisterUsername.Size = new Size(100, 23);
+            txtRegisterUsername.Size = new Size(160, 23);
             txtRegisterUsername.TabIndex = 2;
             // 
             // txtRegisterPhone
             // 
             txtRegisterPhone.Location = new Point(40, 300);
             txtRegisterPhone.Name = "txtRegisterPhone";
-            txtRegisterPhone.Size = new Size(100, 23);
+            txtRegisterPhone.Size = new Size(160, 23);
             txtRegisterPhone.TabIndex = 2;
             // 
             // txtRegisterEmail
             // 
             txtRegisterEmail.Location = new Point(40, 220);
             txtRegisterEmail.Name = "txtRegisterEmail";
-            txtRegisterEmail.Size = new Size(100, 23);
+            txtRegisterEmail.Size = new Size(160, 23);
             txtRegisterEmail.TabIndex = 2;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(180, 200);
+            label9.Location = new Point(240, 200);
             label9.Name = "label9";
             label9.Size = new Size(104, 15);
             label9.TabIndex = 1;
@@ -204,13 +204,13 @@
             // 
             txtRegisterLastname.Location = new Point(40, 140);
             txtRegisterLastname.Name = "txtRegisterLastname";
-            txtRegisterLastname.Size = new Size(100, 23);
+            txtRegisterLastname.Size = new Size(160, 23);
             txtRegisterLastname.TabIndex = 2;
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(180, 120);
+            label7.Location = new Point(240, 120);
             label7.Name = "label7";
             label7.Size = new Size(57, 15);
             label7.TabIndex = 1;
@@ -219,7 +219,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(180, 40);
+            label6.Location = new Point(240, 40);
             label6.Name = "label6";
             label6.Size = new Size(60, 15);
             label6.TabIndex = 1;
@@ -256,7 +256,7 @@
             // 
             txtRegisterFirstname.Location = new Point(40, 60);
             txtRegisterFirstname.Name = "txtRegisterFirstname";
-            txtRegisterFirstname.Size = new Size(100, 23);
+            txtRegisterFirstname.Size = new Size(160, 23);
             txtRegisterFirstname.TabIndex = 2;
             // 
             // LoginForm

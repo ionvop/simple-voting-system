@@ -14,6 +14,10 @@ namespace _20241008
     public partial class RoomListForm : Form
     {
         public int userId;
+        public List<int> roomIds = new();
+        public List<string> roomNames = new();
+        public List<int> createdRoomIds = new();
+        public List<string> createdRoomNames = new();
 
         public RoomListForm(int userId)
         {
@@ -35,6 +39,26 @@ namespace _20241008
                 txtEmail.Text = reader.GetString("email");
                 txtPhone.Text = reader.GetString("phone");
                 txtUsername.Text = reader.GetString("username");
+                reader.Close();
+                reader = g_proc.fncGetRoomsByUserId(userId);
+
+                while (reader.Read())
+                {
+                    roomIds.Add(reader.GetInt32("id"));
+                    roomNames.Add(reader.GetString("name"));
+                }
+
+                listRooms.DataSource = roomNames.ToArray();
+                reader.Close();
+                reader = g_proc.fncGetRoomsByAuthor(userId);
+
+                while (reader.Read())
+                {
+                    createdRoomIds.Add(reader.GetInt32("id"));
+                    createdRoomNames.Add(reader.GetString("name"));
+                }
+
+                listCreatedRooms.DataSource = createdRoomNames.ToArray();
             }
             catch (Exception err)
             {
@@ -51,6 +75,7 @@ namespace _20241008
                 string username = txtUsername.Text;
                 string email = txtEmail.Text;
                 string phone = txtPhone.Text;
+                string votersId = txtVotersId.Text;
 
                 if (firstname.Length <= 0 || lastname.Length <= 0 || username.Length <= 0 || email.Length <= 0 || phone.Length <= 0)
                 {
@@ -61,7 +86,7 @@ namespace _20241008
                 GlobalProcedures g_proc = new();
                 g_proc.fncDatabaseConnection();
 
-                if (g_proc.fncUpdateUserById(userId, firstname, lastname, username, email, phone) == false)
+                if (g_proc.fncUpdateUserById(userId, firstname, lastname, username, email, phone, votersId) == false)
                 {
                     MessageBox.Show("Failed to update changes.");
                     return;
@@ -112,7 +137,122 @@ namespace _20241008
                     MessageBox.Show("Failed to change password.");
                     return;
                 }
-            } catch (Exception err)
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to log out?", "Log out", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+
+                Navigator.Navigate(this, new LoginForm());
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnCreateRoom_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GlobalProcedures g_proc = new();
+                g_proc.fncDatabaseConnection();
+                MySqlDataReader reader = g_proc.fncCreateRoom(userId);
+                reader.Read();
+                int roomId = reader.GetInt32(0);
+                Navigator.Navigate(this, new RoomForm(userId, roomId));
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int roomId = roomIds.ElementAt(listRooms.SelectedIndex);
+                Navigator.Navigate(this, new RoomForm(userId, roomId));
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnOpenCreatedRoom_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int roomId = createdRoomIds.ElementAt(listCreatedRooms.SelectedIndex);
+                Navigator.Navigate(this, new RoomForm(userId, roomId));
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnJoinRoom_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GlobalProcedures g_proc = new();
+                g_proc.fncDatabaseConnection();
+                MySqlDataReader reader = g_proc.fncJoinRoomByCode(userId, txtRoomCode.Text);
+
+                if (reader.Read() == false)
+                {
+                    MessageBox.Show("Invalid room code.");
+                    return;
+                }
+
+                int roomId = reader.GetInt32(0);
+                Navigator.Navigate(this, new RoomForm(userId, roomId));
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to leave this room?", "Leave room", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+
+                GlobalProcedures g_proc = new();
+                g_proc.fncDatabaseConnection();
+                int roomId = roomIds.ElementAt(listRooms.SelectedIndex);
+
+                if (g_proc.fncLeaveRoom(userId, roomId) == false)
+                {
+                    MessageBox.Show("Failed to leave room.");
+                    return;
+                }
+
+                Navigator.Navigate(this, new RoomListForm(userId));
+            }
+            catch (Exception err)
             {
                 MessageBox.Show(err.Message);
             }

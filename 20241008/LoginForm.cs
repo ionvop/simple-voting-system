@@ -51,14 +51,7 @@ namespace _20241008
 
                 GlobalProcedures g_proc = new();
                 g_proc.fncDatabaseConnection();
-
-                if (g_proc.fncRegister(firstname, lastname, username, email, password, phone) == false)
-                {
-                    MessageBox.Show("Failed to register.");
-                    return;
-                }
-
-                MySqlDataReader reader = g_proc.fncLogin(username, password);
+                MySqlDataReader reader = g_proc.fncRegister(firstname, lastname, username, email, password, phone);
                 reader.Read();
                 int userId = reader.GetInt32(0);
                 Navigator.Navigate(this, new RoomListForm(userId));

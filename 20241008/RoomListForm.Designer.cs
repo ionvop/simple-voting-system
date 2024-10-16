@@ -34,14 +34,17 @@
             txtRoomCode = new TextBox();
             btnJoinRoom = new Button();
             groupBox1 = new GroupBox();
+            btnLogout = new Button();
             btnSave = new Button();
             label3 = new Label();
             txtFirstname = new TextBox();
             label4 = new Label();
+            txtVotersId = new TextBox();
             txtUsername = new TextBox();
             label5 = new Label();
             label8 = new Label();
             txtPhone = new TextBox();
+            label11 = new Label();
             label6 = new Label();
             txtLastname = new TextBox();
             txtEmail = new TextBox();
@@ -54,8 +57,11 @@
             label2 = new Label();
             txtNewPassword = new TextBox();
             groupBox3 = new GroupBox();
+            btnRemove = new Button();
             label10 = new Label();
             listCreatedRooms = new ListBox();
+            btnOpenCreatedRoom = new Button();
+            btnOpen = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -67,22 +73,23 @@
             listRooms.ItemHeight = 15;
             listRooms.Location = new Point(20, 40);
             listRooms.Name = "listRooms";
-            listRooms.Size = new Size(220, 109);
+            listRooms.Size = new Size(220, 94);
             listRooms.TabIndex = 0;
             // 
             // btnCreateRoom
             // 
-            btnCreateRoom.Location = new Point(20, 300);
+            btnCreateRoom.Location = new Point(20, 360);
             btnCreateRoom.Name = "btnCreateRoom";
-            btnCreateRoom.Size = new Size(220, 23);
+            btnCreateRoom.Size = new Size(120, 23);
             btnCreateRoom.TabIndex = 1;
             btnCreateRoom.Text = "Create new room";
             btnCreateRoom.UseVisualStyleBackColor = true;
+            btnCreateRoom.Click += btnCreateRoom_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(20, 340);
+            label1.Location = new Point(20, 180);
             label1.Name = "label1";
             label1.Size = new Size(68, 15);
             label1.TabIndex = 2;
@@ -90,30 +97,34 @@
             // 
             // txtRoomCode
             // 
-            txtRoomCode.Location = new Point(20, 360);
+            txtRoomCode.Location = new Point(20, 200);
             txtRoomCode.Name = "txtRoomCode";
             txtRoomCode.Size = new Size(120, 23);
             txtRoomCode.TabIndex = 3;
             // 
             // btnJoinRoom
             // 
-            btnJoinRoom.Location = new Point(160, 360);
+            btnJoinRoom.Location = new Point(160, 200);
             btnJoinRoom.Name = "btnJoinRoom";
             btnJoinRoom.Size = new Size(75, 23);
             btnJoinRoom.TabIndex = 4;
             btnJoinRoom.Text = "Join room";
             btnJoinRoom.UseVisualStyleBackColor = true;
+            btnJoinRoom.Click += btnJoinRoom_Click;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnLogout);
             groupBox1.Controls.Add(btnSave);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txtFirstname);
             groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(txtVotersId);
             groupBox1.Controls.Add(txtUsername);
             groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(txtPhone);
+            groupBox1.Controls.Add(label11);
             groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(txtLastname);
             groupBox1.Controls.Add(txtEmail);
@@ -124,9 +135,19 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Profile";
             // 
+            // btnLogout
+            // 
+            btnLogout.Location = new Point(20, 340);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(100, 23);
+            btnLogout.TabIndex = 21;
+            btnLogout.Text = "Logout";
+            btnLogout.UseVisualStyleBackColor = true;
+            btnLogout.Click += btnLogout_Click;
+            // 
             // btnSave
             // 
-            btnSave.Location = new Point(140, 260);
+            btnSave.Location = new Point(140, 340);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(100, 23);
             btnSave.TabIndex = 6;
@@ -158,6 +179,13 @@
             label4.Size = new Size(61, 15);
             label4.TabIndex = 13;
             label4.Text = "Last name";
+            // 
+            // txtVotersId
+            // 
+            txtVotersId.Location = new Point(140, 260);
+            txtVotersId.Name = "txtVotersId";
+            txtVotersId.Size = new Size(100, 23);
+            txtVotersId.TabIndex = 16;
             // 
             // txtUsername
             // 
@@ -191,6 +219,15 @@
             txtPhone.Size = new Size(100, 23);
             txtPhone.TabIndex = 17;
             // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(140, 240);
+            label11.Name = "label11";
+            label11.Size = new Size(53, 15);
+            label11.TabIndex = 10;
+            label11.Text = "Voters ID";
+            // 
             // label6
             // 
             label6.AutoSize = true;
@@ -216,24 +253,24 @@
             // 
             // txtRepassword
             // 
-            txtRepassword.Location = new Point(40, 260);
+            txtRepassword.Location = new Point(20, 260);
             txtRepassword.Name = "txtRepassword";
-            txtRepassword.Size = new Size(100, 23);
+            txtRepassword.Size = new Size(160, 23);
             txtRepassword.TabIndex = 14;
             txtRepassword.UseSystemPasswordChar = true;
             // 
             // txtOldPassword
             // 
-            txtOldPassword.Location = new Point(40, 60);
+            txtOldPassword.Location = new Point(20, 60);
             txtOldPassword.Name = "txtOldPassword";
-            txtOldPassword.Size = new Size(100, 23);
+            txtOldPassword.Size = new Size(160, 23);
             txtOldPassword.TabIndex = 15;
             txtOldPassword.UseSystemPasswordChar = true;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(40, 240);
+            label9.Location = new Point(20, 240);
             label9.Name = "label9";
             label9.Size = new Size(104, 15);
             label9.TabIndex = 8;
@@ -242,7 +279,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(40, 40);
+            label7.Location = new Point(20, 40);
             label7.Name = "label7";
             label7.Size = new Size(57, 15);
             label7.TabIndex = 9;
@@ -277,7 +314,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(40, 140);
+            label2.Location = new Point(20, 140);
             label2.Name = "label2";
             label2.Size = new Size(84, 15);
             label2.TabIndex = 9;
@@ -285,19 +322,22 @@
             // 
             // txtNewPassword
             // 
-            txtNewPassword.Location = new Point(40, 160);
+            txtNewPassword.Location = new Point(20, 160);
             txtNewPassword.Name = "txtNewPassword";
-            txtNewPassword.Size = new Size(100, 23);
+            txtNewPassword.Size = new Size(160, 23);
             txtNewPassword.TabIndex = 15;
             txtNewPassword.UseSystemPasswordChar = true;
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(btnRemove);
             groupBox3.Controls.Add(label10);
             groupBox3.Controls.Add(listCreatedRooms);
             groupBox3.Controls.Add(listRooms);
             groupBox3.Controls.Add(btnCreateRoom);
             groupBox3.Controls.Add(label1);
+            groupBox3.Controls.Add(btnOpenCreatedRoom);
+            groupBox3.Controls.Add(btnOpen);
             groupBox3.Controls.Add(btnJoinRoom);
             groupBox3.Controls.Add(txtRoomCode);
             groupBox3.Location = new Point(520, 20);
@@ -307,10 +347,20 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Room list";
             // 
+            // btnRemove
+            // 
+            btnRemove.Location = new Point(80, 140);
+            btnRemove.Name = "btnRemove";
+            btnRemove.Size = new Size(75, 23);
+            btnRemove.TabIndex = 7;
+            btnRemove.Text = "Leave";
+            btnRemove.UseVisualStyleBackColor = true;
+            btnRemove.Click += btnRemove_Click;
+            // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(20, 180);
+            label10.Location = new Point(20, 240);
             label10.Name = "label10";
             label10.Size = new Size(68, 15);
             label10.TabIndex = 6;
@@ -320,10 +370,30 @@
             // 
             listCreatedRooms.FormattingEnabled = true;
             listCreatedRooms.ItemHeight = 15;
-            listCreatedRooms.Location = new Point(20, 200);
+            listCreatedRooms.Location = new Point(20, 260);
             listCreatedRooms.Name = "listCreatedRooms";
             listCreatedRooms.Size = new Size(220, 94);
             listCreatedRooms.TabIndex = 5;
+            // 
+            // btnOpenCreatedRoom
+            // 
+            btnOpenCreatedRoom.Location = new Point(160, 360);
+            btnOpenCreatedRoom.Name = "btnOpenCreatedRoom";
+            btnOpenCreatedRoom.Size = new Size(75, 23);
+            btnOpenCreatedRoom.TabIndex = 4;
+            btnOpenCreatedRoom.Text = "Open";
+            btnOpenCreatedRoom.UseVisualStyleBackColor = true;
+            btnOpenCreatedRoom.Click += btnOpenCreatedRoom_Click;
+            // 
+            // btnOpen
+            // 
+            btnOpen.Location = new Point(160, 140);
+            btnOpen.Name = "btnOpen";
+            btnOpen.Size = new Size(75, 23);
+            btnOpen.TabIndex = 4;
+            btnOpen.Text = "Open";
+            btnOpen.UseVisualStyleBackColor = true;
+            btnOpen.Click += btnOpen_Click;
             // 
             // RoomListForm
             // 
@@ -375,5 +445,11 @@
         private GroupBox groupBox3;
         private ListBox listCreatedRooms;
         private Label label10;
+        private Button btnLogout;
+        private TextBox txtVotersId;
+        private Label label11;
+        private Button btnOpen;
+        private Button btnOpenCreatedRoom;
+        private Button btnRemove;
     }
 }

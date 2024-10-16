@@ -18,6 +18,8 @@ namespace _20241008
                 }
             };
 
+            to.StartPosition = FormStartPosition.Manual;
+            to.Location = from.Location;
             to.Show();
             from.Close();
         }
