@@ -71,7 +71,7 @@ namespace _20241008
                     memberIds.Add(reader.GetInt32("id"));
                     memberNames.Add(reader.GetString("firstname") + " " + reader.GetString("lastname") + " (" + reader.GetString("username") + ")");
 
-                    if (reader.GetInt32("is_done") == 1)
+                    if (reader.GetInt32("id") == userId && reader.GetInt32("is_done") == 1)
                     {
                         btnVote.Visible = false;
                         btnFinalize.Visible = false;
