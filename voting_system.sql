@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2024 at 04:51 PM
+-- Generation Time: Oct 17, 2024 at 05:26 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -100,17 +100,26 @@ WHERE `username` = `p_username`
 AND `password` = `p_password`
 LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `procPrintResults` (IN `p_room_id` INT)   SELECT 
-`tblroles`.`title` AS `role_title`,
-CONCAT(`tblusers`.`firstname`, ' ', `tblusers`.`lastname`, ' (', `tblusers`.`username`, ')') AS `candidate_user_id`,
-COUNT(`tblvotes`.id) AS `total_votes`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procPrintResults` (IN `p_room_id` INT)   SELECT `tblroles`.`title`
+AS `role_title`,
+CONCAT(`tblusers`.`firstname`, ' ', `tblusers`.`lastname`, ' (', `tblusers`.`username`, ')')
+AS `candidate_user_id`,
+SUM(IFNULL(`tbljoined_rooms`.`is_done`, 0))
+AS `total_votes`
 FROM `tblroles`
-JOIN `tblcandidates` ON `tblroles`.`id` = `tblcandidates`.`role_id`
-LEFT JOIN `tblvotes` ON `tblcandidates`.`id` = `tblvotes`.`candidate_id`
-LEFT JOIN `tblusers` ON `tblcandidates`.`user_id` = `tblusers`.`id`
+JOIN `tblcandidates`
+ON `tblroles`.`id` = `tblcandidates`.`role_id`
+LEFT JOIN `tblvotes`
+ON `tblcandidates`.`id` = `tblvotes`.`candidate_id`
+LEFT JOIN `tblusers`
+ON `tblcandidates`.`user_id` = `tblusers`.`id`
+LEFT JOIN `tbljoined_rooms`
+ON `tbljoined_rooms`.`user_id` = `tblvotes`.`user_id`
+AND `tbljoined_rooms`.`room_id` = `tblroles`.`room_id`
 WHERE `tblroles`.`room_id` = `p_room_id`
 GROUP BY `tblroles`.`id`, `tblroles`.`title`, `tblcandidates`.`user_id`
-ORDER BY `tblroles`.`id`, `total_votes` DESC$$
+ORDER BY `tblroles`.`id`, `total_votes`
+DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procRegister` (IN `p_firstname` VARCHAR(50), IN `p_lastname` VARCHAR(50), IN `p_username` VARCHAR(50), IN `p_password` VARCHAR(50), IN `p_email` VARCHAR(50), IN `p_phone` VARCHAR(50))   BEGIN
 INSERT INTO `tblusers`(`firstname`, `lastname`, `username`, `password`, `email`, `phone`)
@@ -261,7 +270,8 @@ CREATE TABLE `tblcandidates` (
 --
 
 INSERT INTO `tblcandidates` (`id`, `user_id`, `room_id`, `role_id`, `partylist_id`, `date`) VALUES
-(5, 1, 16, 19, 17, '2024-10-16 14:43:57');
+(5, 1, 16, 19, 17, '2024-10-16 14:43:57'),
+(6, 2, 16, 19, 17, '2024-10-17 03:18:25');
 
 -- --------------------------------------------------------
 
@@ -283,9 +293,8 @@ CREATE TABLE `tbljoined_rooms` (
 --
 
 INSERT INTO `tbljoined_rooms` (`id`, `user_id`, `room_id`, `is_moderator`, `is_done`, `date`) VALUES
-(6, 1, 9, 0, 1, '2024-10-16 04:53:58'),
-(10, 2, 9, 0, 0, '2024-10-16 12:09:32'),
-(11, 1, 16, 0, 0, '2024-10-16 14:43:46');
+(12, 1, 16, 0, 0, '2024-10-17 03:01:44'),
+(13, 2, 16, 0, 1, '2024-10-17 03:18:08');
 
 -- --------------------------------------------------------
 
@@ -394,7 +403,30 @@ CREATE TABLE `tblvotes` (
 --
 
 INSERT INTO `tblvotes` (`id`, `user_id`, `candidate_id`, `date`) VALUES
-(7, 1, 5, '2024-10-16 14:46:37');
+(9, 2, 5, '2024-10-17 03:24:19'),
+(10, 1, 5, '2024-10-17 03:24:54');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_all_results`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_all_results` (
+`room_id` int(11)
+,`role_title` varchar(50)
+,`candidate_name` varchar(154)
+,`total_votes` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_all_results`
+--
+DROP TABLE IF EXISTS `v_all_results`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_all_results`  AS SELECT `tblroles`.`room_id` AS `room_id`, `tblroles`.`title` AS `role_title`, concat(`tblusers`.`firstname`,' ',`tblusers`.`lastname`,' (',`tblusers`.`username`,')') AS `candidate_name`, count(`tblvotes`.`id`) AS `total_votes` FROM (((`tblroles` join `tblcandidates` on(`tblroles`.`id` = `tblcandidates`.`role_id`)) left join `tblvotes` on(`tblcandidates`.`id` = `tblvotes`.`candidate_id`)) left join `tblusers` on(`tblcandidates`.`user_id` = `tblusers`.`id`)) GROUP BY `tblroles`.`room_id`, `tblroles`.`id`, `tblroles`.`title`, `tblcandidates`.`user_id` ORDER BY `tblroles`.`room_id` ASC, `tblroles`.`id` ASC, count(`tblvotes`.`id`) DESC ;
 
 --
 -- Indexes for dumped tables
@@ -414,7 +446,9 @@ ALTER TABLE `tblcandidates`
 -- Indexes for table `tbljoined_rooms`
 --
 ALTER TABLE `tbljoined_rooms`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `room_id` (`room_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `tblpartylists`
@@ -461,13 +495,13 @@ ALTER TABLE `tblvotes`
 -- AUTO_INCREMENT for table `tblcandidates`
 --
 ALTER TABLE `tblcandidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbljoined_rooms`
 --
 ALTER TABLE `tbljoined_rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tblpartylists`
@@ -497,7 +531,7 @@ ALTER TABLE `tblusers`
 -- AUTO_INCREMENT for table `tblvotes`
 --
 ALTER TABLE `tblvotes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -511,6 +545,13 @@ ALTER TABLE `tblcandidates`
   ADD CONSTRAINT `tblcandidates_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `tblroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tblcandidates_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `tblrooms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tblcandidates_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tbljoined_rooms`
+--
+ALTER TABLE `tbljoined_rooms`
+  ADD CONSTRAINT `tbljoined_rooms_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `tblrooms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tbljoined_rooms_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblpartylists`
