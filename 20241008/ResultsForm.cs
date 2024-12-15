@@ -23,6 +23,10 @@ namespace _20241008
             this.roomId = roomId;
         }
 
+        public ResultsForm()
+        {
+        }
+
         private void ResultForm_Load(object sender, EventArgs e)
         {
             try

@@ -14,9 +14,13 @@ namespace _20241008
 {
     public partial class LoginForm : Form
     {
+        bool mousedown;
+        Point offset;
         public LoginForm()
         {
             InitializeComponent();
+            grpReg.Visible = false;
+           
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -32,6 +36,12 @@ namespace _20241008
                 string repassword = txtRegisterRepassword.Text;
 
                 if (firstname.Length <= 0 || lastname.Length <= 0 || email.Length <= 0 || phone.Length <= 0 || username.Length <= 0 || password.Length <= 0 || repassword.Length <= 0)
+                {
+                    MessageBox.Show("Please fill in all the fields.");
+                    return;
+                }
+
+                if (firstname.Equals("First Name") || lastname.Equals("Last Name") || email.Equals("Email") || phone.Equals("Phone") || username.Equals("Username") || password.Equals("Password") || repassword.Equals("Confirm Password"))
                 {
                     MessageBox.Show("Please fill in all the fields.");
                     return;
@@ -54,7 +64,7 @@ namespace _20241008
                 MySqlDataReader reader = g_proc.fncRegister(firstname, lastname, username, email, password, phone);
                 reader.Read();
                 int userId = reader.GetInt32(0);
-                Navigator.Navigate(this, new RoomListForm(userId));
+                MessageBox.Show("Voter Successfully registered!");
             }
             catch (Exception err)
             {
@@ -84,8 +94,63 @@ namespace _20241008
             }
             catch (Exception err)
             {
-                MessageBox.Show(err.Message);
+                MessageBox.Show("Invalid username or password.");
             }
+        }
+
+        private void lblRegister(object sender, EventArgs e)
+        {
+            grpReg.Visible = true;
+            grpLogin.Visible = false;
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+            grpLogin.Visible = true;
+            grpReg.Visible = false;
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+
+                DialogResult result = MessageBox.Show("Do you really want to close?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+
+                if (result == DialogResult.Yes)
+                {
+
+                    this.Close();
+                }
+            }
+            catch (Exception)
+            {
+
+
+            }
+        }
+        private void Status_Move(object sender, MouseEventArgs e)
+        {
+            if (mousedown == true)
+            {
+                Point currentScreenPos = PointToScreen(e.Location);
+                Location = new Point(currentScreenPos.X - offset.X, currentScreenPos.Y - offset.Y);
+            }
+        }
+
+        private void Status_Up(object sender, MouseEventArgs e)
+        {
+            mousedown = false;
+        }
+
+        private void Status_Down(object sender, MouseEventArgs e)
+        {
+            offset.X = e.X;
+            offset.Y = e.Y;
+            mousedown = true;
         }
     }
 }

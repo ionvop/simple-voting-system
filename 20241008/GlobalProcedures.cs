@@ -767,5 +767,29 @@ namespace _20241008
 
             return false;
         }
+
+        public bool fncSetVerifiedRoom(int roomId, bool isVerifiedOnly)
+        {
+            try
+            {
+                string sql = "procSetVerifiedRoom";
+                MySqlCommand cmd = new(sql, database);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@p_room_id", roomId);
+                cmd.Parameters.AddWithValue("@p_is_verified_only", isVerifiedOnly);
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    return true;
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+            }
+
+            return false;
+        }
     }
 }

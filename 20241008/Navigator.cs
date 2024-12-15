@@ -18,7 +18,7 @@ namespace _20241008
                 }
             };
 
-            to.StartPosition = FormStartPosition.Manual;
+            to.StartPosition = FormStartPosition.CenterScreen;
             to.Location = from.Location;
             to.Show();
             from.Close();

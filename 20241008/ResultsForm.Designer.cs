@@ -38,50 +38,65 @@
             // 
             // btnBack
             // 
-            btnBack.Location = new Point(20, 20);
+            btnBack.BackColor = Color.White;
+            btnBack.BackgroundImageLayout = ImageLayout.Zoom;
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.ImageAlign = ContentAlignment.TopLeft;
+            btnBack.Location = new Point(23, 27);
+            btnBack.Margin = new Padding(3, 4, 3, 4);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(75, 23);
+            btnBack.Size = new Size(86, 31);
             btnBack.TabIndex = 0;
             btnBack.Text = "Back";
-            btnBack.UseVisualStyleBackColor = true;
+            btnBack.UseVisualStyleBackColor = false;
             btnBack.Click += btnBack_Click;
             // 
             // gridResult
             // 
+            gridResult.BackgroundColor = Color.White;
             gridResult.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             gridResult.Columns.AddRange(new DataGridViewColumn[] { role, name, total_votes });
-            gridResult.Location = new Point(20, 60);
+            gridResult.GridColor = Color.Black;
+            gridResult.Location = new Point(23, 80);
+            gridResult.Margin = new Padding(3, 4, 3, 4);
             gridResult.Name = "gridResult";
+            gridResult.RowHeadersWidth = 51;
             gridResult.RowTemplate.Height = 25;
-            gridResult.Size = new Size(760, 360);
+            gridResult.Size = new Size(743, 680);
             gridResult.TabIndex = 1;
             // 
             // role
             // 
             role.HeaderText = "Role";
+            role.MinimumWidth = 6;
             role.Name = "role";
             role.Width = 230;
             // 
             // name
             // 
             name.HeaderText = "Name";
+            name.MinimumWidth = 6;
             name.Name = "name";
             name.Width = 230;
             // 
             // total_votes
             // 
             total_votes.HeaderText = "Total Votes";
+            total_votes.MinimumWidth = 6;
             total_votes.Name = "total_votes";
             total_votes.Width = 230;
             // 
-            // ResultForm
+            // ResultsForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackColor = Color.FromArgb(8, 6, 79);
+            ClientSize = new Size(791, 785);
             Controls.Add(gridResult);
             Controls.Add(btnBack);
-            Name = "ResultForm";
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "ResultsForm";
             Text = "Result";
             Load += ResultForm_Load;
             ((System.ComponentModel.ISupportInitialize)gridResult).EndInit();

@@ -28,276 +28,389 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
-            btnLogin = new Button();
+            grpLogin = new GroupBox();
+            pictureBox2 = new PictureBox();
+            pictureBox1 = new PictureBox();
             txtLoginPassword = new TextBox();
-            txtLoginUsername = new TextBox();
-            label2 = new Label();
+            panel1 = new Panel();
             label1 = new Label();
-            groupBox2 = new GroupBox();
-            btnRegister = new Button();
-            label3 = new Label();
+            label13 = new Label();
+            label10 = new Label();
+            btnLogin = new Button();
+            txtLoginUsername = new TextBox();
+            grpReg = new GroupBox();
             txtRegisterRepassword = new TextBox();
             txtRegisterPassword = new TextBox();
+            panel2 = new Panel();
+            label2 = new Label();
+            label12 = new Label();
+            label11 = new Label();
+            btnRegister = new Button();
             txtRegisterUsername = new TextBox();
             txtRegisterPhone = new TextBox();
             txtRegisterEmail = new TextBox();
-            label9 = new Label();
             txtRegisterLastname = new TextBox();
-            label7 = new Label();
-            label6 = new Label();
-            label8 = new Label();
-            label5 = new Label();
-            label4 = new Label();
             txtRegisterFirstname = new TextBox();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
+            panel3 = new Panel();
+            btnExit = new Button();
+            panel4 = new Panel();
+            grpLogin.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel1.SuspendLayout();
+            grpReg.SuspendLayout();
+            panel2.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
-            // groupBox1
+            // grpLogin
             // 
-            groupBox1.Controls.Add(btnLogin);
-            groupBox1.Controls.Add(txtLoginPassword);
-            groupBox1.Controls.Add(txtLoginUsername);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(20, 20);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(240, 380);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Login";
+            grpLogin.BackColor = Color.White;
+            grpLogin.Controls.Add(pictureBox2);
+            grpLogin.Controls.Add(pictureBox1);
+            grpLogin.Controls.Add(txtLoginPassword);
+            grpLogin.Controls.Add(panel1);
+            grpLogin.Controls.Add(label13);
+            grpLogin.Controls.Add(label10);
+            grpLogin.Controls.Add(btnLogin);
+            grpLogin.Controls.Add(txtLoginUsername);
+            grpLogin.Location = new Point(269, 59);
+            grpLogin.Name = "grpLogin";
+            grpLogin.Size = new Size(240, 315);
+            grpLogin.TabIndex = 0;
+            grpLogin.TabStop = false;
             // 
-            // btnLogin
+            // pictureBox2
             // 
-            btnLogin.Location = new Point(120, 260);
-            btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(75, 23);
-            btnLogin.TabIndex = 1;
-            btnLogin.Text = "Login";
-            btnLogin.UseVisualStyleBackColor = true;
-            btnLogin.Click += btnLogin_Click;
+            pictureBox2.BackColor = Color.White;
+            pictureBox2.BackgroundImage = Properties.Resources.user;
+            pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox2.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox2.Location = new Point(40, 79);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(23, 23);
+            pictureBox2.TabIndex = 9;
+            pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.White;
+            pictureBox1.BackgroundImage = Properties.Resources.padlock1;
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox1.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox1.Location = new Point(40, 128);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(23, 23);
+            pictureBox1.TabIndex = 6;
+            pictureBox1.TabStop = false;
             // 
             // txtLoginPassword
             // 
-            txtLoginPassword.Location = new Point(40, 180);
+            txtLoginPassword.ForeColor = Color.Black;
+            txtLoginPassword.Location = new Point(62, 128);
             txtLoginPassword.Name = "txtLoginPassword";
-            txtLoginPassword.Size = new Size(160, 23);
-            txtLoginPassword.TabIndex = 2;
+            txtLoginPassword.PlaceholderText = "Password";
+            txtLoginPassword.Size = new Size(138, 23);
+            txtLoginPassword.TabIndex = 8;
             txtLoginPassword.UseSystemPasswordChar = true;
             // 
-            // txtLoginUsername
+            // panel1
             // 
-            txtLoginUsername.Location = new Point(40, 80);
-            txtLoginUsername.Name = "txtLoginUsername";
-            txtLoginUsername.Size = new Size(160, 23);
-            txtLoginUsername.TabIndex = 2;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(40, 160);
-            label2.Name = "label2";
-            label2.Size = new Size(57, 15);
-            label2.TabIndex = 1;
-            label2.Text = "Password";
+            panel1.BackColor = Color.FromArgb(33, 40, 190);
+            panel1.Controls.Add(label1);
+            panel1.Location = new Point(0, -52);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(240, 93);
+            panel1.TabIndex = 7;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(40, 60);
+            label1.Font = new Font("Yu Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(41, 61);
             label1.Name = "label1";
-            label1.Size = new Size(60, 15);
+            label1.Size = new Size(159, 27);
             label1.TabIndex = 1;
-            label1.Text = "Username";
+            label1.Text = "VOTER LOGIN";
             // 
-            // groupBox2
+            // label13
             // 
-            groupBox2.Controls.Add(btnRegister);
-            groupBox2.Controls.Add(label3);
-            groupBox2.Controls.Add(txtRegisterRepassword);
-            groupBox2.Controls.Add(txtRegisterPassword);
-            groupBox2.Controls.Add(txtRegisterUsername);
-            groupBox2.Controls.Add(txtRegisterPhone);
-            groupBox2.Controls.Add(txtRegisterEmail);
-            groupBox2.Controls.Add(label9);
-            groupBox2.Controls.Add(txtRegisterLastname);
-            groupBox2.Controls.Add(label7);
-            groupBox2.Controls.Add(label6);
-            groupBox2.Controls.Add(label8);
-            groupBox2.Controls.Add(label5);
-            groupBox2.Controls.Add(label4);
-            groupBox2.Controls.Add(txtRegisterFirstname);
-            groupBox2.Location = new Point(300, 20);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(440, 380);
-            groupBox2.TabIndex = 1;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Register";
+            label13.AutoSize = true;
+            label13.ForeColor = Color.Black;
+            label13.Location = new Point(62, 272);
+            label13.Name = "label13";
+            label13.Size = new Size(131, 15);
+            label13.TabIndex = 6;
+            label13.Text = "Don't have an account?";
             // 
-            // btnRegister
+            // label10
             // 
-            btnRegister.Location = new Point(320, 300);
-            btnRegister.Name = "btnRegister";
-            btnRegister.Size = new Size(75, 23);
-            btnRegister.TabIndex = 1;
-            btnRegister.Text = "Register";
-            btnRegister.UseVisualStyleBackColor = true;
-            btnRegister.Click += btnRegister_Click;
+            label10.AutoSize = true;
+            label10.ForeColor = Color.Blue;
+            label10.Location = new Point(87, 290);
+            label10.Name = "label10";
+            label10.Size = new Size(75, 15);
+            label10.TabIndex = 3;
+            label10.Text = "Register now";
+            label10.Click += lblRegister;
             // 
-            // label3
+            // btnLogin
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(40, 40);
-            label3.Name = "label3";
-            label3.Size = new Size(62, 15);
-            label3.TabIndex = 1;
-            label3.Text = "First name";
+            btnLogin.BackColor = Color.FromArgb(15, 110, 251);
+            btnLogin.FlatStyle = FlatStyle.Flat;
+            btnLogin.Font = new Font("Arial", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnLogin.ForeColor = Color.White;
+            btnLogin.Location = new Point(40, 186);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(161, 31);
+            btnLogin.TabIndex = 1;
+            btnLogin.Text = "Login";
+            btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnLogin_Click;
+            // 
+            // txtLoginUsername
+            // 
+            txtLoginUsername.ForeColor = Color.Black;
+            txtLoginUsername.Location = new Point(62, 79);
+            txtLoginUsername.Name = "txtLoginUsername";
+            txtLoginUsername.PlaceholderText = "Username";
+            txtLoginUsername.Size = new Size(139, 23);
+            txtLoginUsername.TabIndex = 2;
+            // 
+            // grpReg
+            // 
+            grpReg.BackColor = Color.White;
+            grpReg.Controls.Add(txtRegisterRepassword);
+            grpReg.Controls.Add(txtRegisterPassword);
+            grpReg.Controls.Add(panel2);
+            grpReg.Controls.Add(label12);
+            grpReg.Controls.Add(label11);
+            grpReg.Controls.Add(btnRegister);
+            grpReg.Controls.Add(txtRegisterUsername);
+            grpReg.Controls.Add(txtRegisterPhone);
+            grpReg.Controls.Add(txtRegisterEmail);
+            grpReg.Controls.Add(txtRegisterLastname);
+            grpReg.Controls.Add(txtRegisterFirstname);
+            grpReg.Location = new Point(162, 37);
+            grpReg.Name = "grpReg";
+            grpReg.Size = new Size(440, 380);
+            grpReg.TabIndex = 1;
+            grpReg.TabStop = false;
             // 
             // txtRegisterRepassword
             // 
-            txtRegisterRepassword.Location = new Point(240, 220);
+            txtRegisterRepassword.ForeColor = Color.Black;
+            txtRegisterRepassword.Location = new Point(240, 183);
             txtRegisterRepassword.Name = "txtRegisterRepassword";
+            txtRegisterRepassword.PlaceholderText = "Confirm Password";
             txtRegisterRepassword.Size = new Size(160, 23);
-            txtRegisterRepassword.TabIndex = 2;
+            txtRegisterRepassword.TabIndex = 10;
             txtRegisterRepassword.UseSystemPasswordChar = true;
             // 
             // txtRegisterPassword
             // 
-            txtRegisterPassword.Location = new Point(240, 140);
+            txtRegisterPassword.ForeColor = Color.Black;
+            txtRegisterPassword.Location = new Point(240, 132);
             txtRegisterPassword.Name = "txtRegisterPassword";
+            txtRegisterPassword.PlaceholderText = "Password";
             txtRegisterPassword.Size = new Size(160, 23);
-            txtRegisterPassword.TabIndex = 2;
+            txtRegisterPassword.TabIndex = 9;
             txtRegisterPassword.UseSystemPasswordChar = true;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.FromArgb(33, 40, 190);
+            panel2.Controls.Add(label2);
+            panel2.Location = new Point(-25, -46);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(472, 93);
+            panel2.TabIndex = 8;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Yu Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(158, 59);
+            label2.Name = "label2";
+            label2.Size = new Size(191, 27);
+            label2.TabIndex = 1;
+            label2.Text = "REGISTER FORM";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.ForeColor = Color.Black;
+            label12.Location = new Point(124, 340);
+            label12.Name = "label12";
+            label12.Size = new Size(142, 15);
+            label12.TabIndex = 5;
+            label12.Text = "Already have an account?";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.ForeColor = Color.Blue;
+            label11.Location = new Point(266, 340);
+            label11.Name = "label11";
+            label11.Size = new Size(65, 15);
+            label11.TabIndex = 4;
+            label11.Text = "Login Now";
+            label11.Click += label11_Click;
+            // 
+            // btnRegister
+            // 
+            btnRegister.BackColor = Color.FromArgb(15, 110, 251);
+            btnRegister.FlatStyle = FlatStyle.Flat;
+            btnRegister.Font = new Font("Arial", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnRegister.ForeColor = Color.White;
+            btnRegister.Location = new Point(124, 294);
+            btnRegister.Name = "btnRegister";
+            btnRegister.Size = new Size(204, 28);
+            btnRegister.TabIndex = 1;
+            btnRegister.Text = "Register";
+            btnRegister.UseVisualStyleBackColor = false;
+            btnRegister.Click += btnRegister_Click;
             // 
             // txtRegisterUsername
             // 
-            txtRegisterUsername.Location = new Point(240, 60);
+            txtRegisterUsername.ForeColor = Color.Black;
+            txtRegisterUsername.Location = new Point(240, 83);
             txtRegisterUsername.Name = "txtRegisterUsername";
+            txtRegisterUsername.PlaceholderText = "Username";
             txtRegisterUsername.Size = new Size(160, 23);
             txtRegisterUsername.TabIndex = 2;
             // 
             // txtRegisterPhone
             // 
-            txtRegisterPhone.Location = new Point(40, 300);
+            txtRegisterPhone.ForeColor = Color.Black;
+            txtRegisterPhone.Location = new Point(40, 234);
             txtRegisterPhone.Name = "txtRegisterPhone";
+            txtRegisterPhone.PlaceholderText = "Phone";
             txtRegisterPhone.Size = new Size(160, 23);
             txtRegisterPhone.TabIndex = 2;
             // 
             // txtRegisterEmail
             // 
-            txtRegisterEmail.Location = new Point(40, 220);
+            txtRegisterEmail.ForeColor = Color.Black;
+            txtRegisterEmail.Location = new Point(40, 183);
             txtRegisterEmail.Name = "txtRegisterEmail";
+            txtRegisterEmail.PlaceholderText = "Email";
             txtRegisterEmail.Size = new Size(160, 23);
             txtRegisterEmail.TabIndex = 2;
             // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(240, 200);
-            label9.Name = "label9";
-            label9.Size = new Size(104, 15);
-            label9.TabIndex = 1;
-            label9.Text = "Confirm password";
-            // 
             // txtRegisterLastname
             // 
-            txtRegisterLastname.Location = new Point(40, 140);
+            txtRegisterLastname.ForeColor = Color.Black;
+            txtRegisterLastname.Location = new Point(40, 132);
             txtRegisterLastname.Name = "txtRegisterLastname";
+            txtRegisterLastname.PlaceholderText = "Last Name";
             txtRegisterLastname.Size = new Size(160, 23);
             txtRegisterLastname.TabIndex = 2;
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(240, 120);
-            label7.Name = "label7";
-            label7.Size = new Size(57, 15);
-            label7.TabIndex = 1;
-            label7.Text = "Password";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(240, 40);
-            label6.Name = "label6";
-            label6.Size = new Size(60, 15);
-            label6.TabIndex = 1;
-            label6.Text = "Username";
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(40, 280);
-            label8.Name = "label8";
-            label8.Size = new Size(41, 15);
-            label8.TabIndex = 1;
-            label8.Text = "Phone";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(40, 200);
-            label5.Name = "label5";
-            label5.Size = new Size(36, 15);
-            label5.TabIndex = 1;
-            label5.Text = "Email";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(40, 120);
-            label4.Name = "label4";
-            label4.Size = new Size(61, 15);
-            label4.TabIndex = 1;
-            label4.Text = "Last name";
-            // 
             // txtRegisterFirstname
             // 
-            txtRegisterFirstname.Location = new Point(40, 60);
+            txtRegisterFirstname.ForeColor = Color.Black;
+            txtRegisterFirstname.Location = new Point(40, 83);
             txtRegisterFirstname.Name = "txtRegisterFirstname";
+            txtRegisterFirstname.PlaceholderText = "First Name";
             txtRegisterFirstname.Size = new Size(160, 23);
             txtRegisterFirstname.TabIndex = 2;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.FromArgb(33, 40, 190);
+            panel3.Controls.Add(btnExit);
+            panel3.Controls.Add(panel4);
+            panel3.Dock = DockStyle.Top;
+            panel3.Location = new Point(0, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(800, 22);
+            panel3.TabIndex = 35;
+            panel3.MouseDown += Status_Down;
+            panel3.MouseMove += Status_Move;
+            panel3.MouseUp += Status_Up;
+            // 
+            // btnExit
+            // 
+            btnExit.BackColor = Color.Transparent;
+            btnExit.BackgroundImage = Properties.Resources.close;
+            btnExit.BackgroundImageLayout = ImageLayout.Stretch;
+            btnExit.FlatStyle = FlatStyle.Popup;
+            btnExit.Location = new Point(772, 2);
+            btnExit.Name = "btnExit";
+            btnExit.Size = new Size(25, 19);
+            btnExit.TabIndex = 36;
+            btnExit.UseVisualStyleBackColor = false;
+            btnExit.Click += btnExit_Click;
+            // 
+            // panel4
+            // 
+            panel4.BackgroundImage = Properties.Resources.close;
+            panel4.BackgroundImageLayout = ImageLayout.Stretch;
+            panel4.Location = new Point(1293, 17);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(24, 21);
+            panel4.TabIndex = 19;
             // 
             // LoginForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(8, 6, 79);
+            BackgroundImage = Properties.Resources.VOTEROO;
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
-            Controls.Add(groupBox2);
-            Controls.Add(groupBox1);
+            Controls.Add(panel3);
+            Controls.Add(grpLogin);
+            Controls.Add(grpReg);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "LoginForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Login";
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            grpLogin.ResumeLayout(false);
+            grpLogin.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            grpReg.ResumeLayout(false);
+            grpReg.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private GroupBox groupBox1;
-        private Label label1;
+        private GroupBox grpLogin;
         private TextBox txtLoginUsername;
         private Button btnLogin;
-        private TextBox txtLoginPassword;
-        private Label label2;
-        private GroupBox groupBox2;
-        private Label label3;
+        private GroupBox grpReg;
         private TextBox txtRegisterLastname;
-        private Label label4;
         private TextBox txtRegisterFirstname;
-        private TextBox txtRegisterPassword;
         private TextBox txtRegisterUsername;
         private TextBox txtRegisterEmail;
-        private Label label7;
-        private Label label6;
-        private Label label5;
         private Button btnRegister;
-        private TextBox txtRegisterRepassword;
         private TextBox txtRegisterPhone;
-        private Label label9;
-        private Label label8;
+        private Label label10;
+        private Panel panel1;
+        private Label label13;
+        private Label label12;
+        private Label label11;
+        private Label label1;
+        private TextBox txtLoginPassword;
+        private PictureBox pictureBox2;
+        private PictureBox pictureBox1;
+        private TextBox txtRegisterRepassword;
+        private TextBox txtRegisterPassword;
+        private Panel panel2;
+        private Label label2;
+        private Panel panel3;
+        private Panel panel4;
+        private Button btnExit;
     }
 }
