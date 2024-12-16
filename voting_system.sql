@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2024 at 05:26 AM
+-- Generation Time: Dec 16, 2024 at 12:59 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -77,17 +77,27 @@ VALUES(`p_title`, `p_room_id`)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procJoinRoomByCode` (IN `p_user_id` INT, IN `p_code` INT)   BEGIN
     DECLARE `v_room_id` INT;
+    DECLARE `v_is_verified_only` INT;
+    DECLARE `v_user_is_verified` INT;
+    DECLARE `v_joined` BOOLEAN DEFAULT FALSE;
 
-    SELECT `id` INTO `v_room_id`
+    SELECT `id`, `is_verified_only` INTO `v_room_id`, `v_is_verified_only`
     FROM `tblrooms`
     WHERE `code` = `p_code`;
 
+    SELECT `is_verified` INTO `v_user_is_verified`
+    FROM `tblusers`
+    WHERE `id` = `p_user_id`;
+
     IF `v_room_id` IS NOT NULL THEN
-        INSERT INTO `tbljoined_rooms`(`user_id`, `room_id`)
-        VALUES(`p_user_id`, `v_room_id`);
+        IF NOT (`v_is_verified_only` = 1 AND `v_user_is_verified` = 0) THEN
+            INSERT INTO `tbljoined_rooms`(`user_id`, `room_id`)
+            VALUES(`p_user_id`, `v_room_id`);
+            SET `v_joined` = TRUE;
+        END IF;
     END IF;
-    
-    SELECT `v_room_id`;
+
+    SELECT CASE WHEN `v_joined` THEN `v_room_id` ELSE -1 END;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procLeaveRoom` (IN `p_user_id` INT, IN `p_room_id` INT)   DELETE FROM `tbljoined_rooms`
@@ -203,6 +213,10 @@ VALUES(`p_user_id`, `p_room_id`, `p_is_moderator`);
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procSetVerifiedRoom` (IN `p_room_id` INT, IN `p_is_verified_only` BOOLEAN)   UPDATE `tblrooms`
+SET `is_verified_only` = `p_is_verified_only`
+WHERE `id` = `p_room_id`$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `procUpdateCandidateById` (IN `p_candidate_id` INT, IN `p_role_id` INT, IN `p_partylist_id` INT)   UPDATE `tblcandidates`
 SET `role_id` = `p_role_id`,
 `partylist_id` = `p_partylist_id`
@@ -265,14 +279,6 @@ CREATE TABLE `tblcandidates` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblcandidates`
---
-
-INSERT INTO `tblcandidates` (`id`, `user_id`, `room_id`, `role_id`, `partylist_id`, `date`) VALUES
-(5, 1, 16, 19, 17, '2024-10-16 14:43:57'),
-(6, 2, 16, 19, 17, '2024-10-17 03:18:25');
-
 -- --------------------------------------------------------
 
 --
@@ -288,14 +294,6 @@ CREATE TABLE `tbljoined_rooms` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tbljoined_rooms`
---
-
-INSERT INTO `tbljoined_rooms` (`id`, `user_id`, `room_id`, `is_moderator`, `is_done`, `date`) VALUES
-(12, 1, 16, 0, 0, '2024-10-17 03:01:44'),
-(13, 2, 16, 0, 1, '2024-10-17 03:18:08');
-
 -- --------------------------------------------------------
 
 --
@@ -308,13 +306,6 @@ CREATE TABLE `tblpartylists` (
   `room_id` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblpartylists`
---
-
-INSERT INTO `tblpartylists` (`id`, `name`, `room_id`, `date`) VALUES
-(17, 'Independent', 16, '2024-10-16 14:43:20');
 
 -- --------------------------------------------------------
 
@@ -329,13 +320,6 @@ CREATE TABLE `tblroles` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblroles`
---
-
-INSERT INTO `tblroles` (`id`, `title`, `room_id`, `date`) VALUES
-(19, 'President', 16, '2024-10-16 14:43:20');
-
 -- --------------------------------------------------------
 
 --
@@ -347,15 +331,9 @@ CREATE TABLE `tblrooms` (
   `name` varchar(50) NOT NULL,
   `author` int(11) NOT NULL,
   `code` varchar(50) NOT NULL,
+  `is_verified_only` tinyint(1) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblrooms`
---
-
-INSERT INTO `tblrooms` (`id`, `name`, `author`, `code`, `date`) VALUES
-(16, 'New Room', 1, '37154', '2024-10-16 14:43:20');
 
 -- --------------------------------------------------------
 
@@ -376,15 +354,6 @@ CREATE TABLE `tblusers` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblusers`
---
-
-INSERT INTO `tblusers` (`id`, `firstname`, `lastname`, `username`, `password`, `email`, `phone`, `voters_id`, `is_verified`, `date`) VALUES
-(1, 'Ionvop', 'Omadle', 'ionvop', '177013', 'ionvop@gmail.com', '09123456789', '', 0, '2024-10-10 15:32:51'),
-(2, 'Chiyu', 'Tamade', 'chu2', '177013', 'chu2@gmail.com', '09123456789', '', 0, '2024-10-10 17:06:32'),
-(4, 'qwe', 'qwe', 'qwe', 'qwer', 'qwe', 'qwe', '', 0, '2024-10-15 07:35:01');
-
 -- --------------------------------------------------------
 
 --
@@ -397,14 +366,6 @@ CREATE TABLE `tblvotes` (
   `candidate_id` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblvotes`
---
-
-INSERT INTO `tblvotes` (`id`, `user_id`, `candidate_id`, `date`) VALUES
-(9, 2, 5, '2024-10-17 03:24:19'),
-(10, 1, 5, '2024-10-17 03:24:54');
 
 -- --------------------------------------------------------
 
@@ -495,43 +456,43 @@ ALTER TABLE `tblvotes`
 -- AUTO_INCREMENT for table `tblcandidates`
 --
 ALTER TABLE `tblcandidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbljoined_rooms`
 --
 ALTER TABLE `tbljoined_rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tblpartylists`
 --
 ALTER TABLE `tblpartylists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tblroles`
 --
 ALTER TABLE `tblroles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `tblrooms`
 --
 ALTER TABLE `tblrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tblvotes`
 --
 ALTER TABLE `tblvotes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
