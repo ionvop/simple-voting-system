@@ -66,9 +66,9 @@ namespace _20241008
                 int userId = reader.GetInt32(0);
                 MessageBox.Show("Voter Successfully registered!");
             }
-            catch (Exception err)
+            catch
             {
-                MessageBox.Show(err.Message);
+                MessageBox.Show("Failed to register.");
             }
         }
 
@@ -92,7 +92,7 @@ namespace _20241008
                 int userId = reader.GetInt32(0);
                 Navigator.Navigate(this, new RoomListForm(userId));
             }
-            catch (Exception err)
+            catch
             {
                 MessageBox.Show("Invalid username or password.");
             }
@@ -114,21 +114,15 @@ namespace _20241008
         {
             try
             {
-
-
-
                 DialogResult result = MessageBox.Show("Do you really want to close?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
 
                 if (result == DialogResult.Yes)
                 {
-
                     this.Close();
                 }
             }
-            catch (Exception)
+            catch
             {
-
 
             }
         }
