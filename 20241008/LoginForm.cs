@@ -65,6 +65,7 @@ namespace _20241008
                 reader.Read();
                 int userId = reader.GetInt32(0);
                 MessageBox.Show("Voter Successfully registered!");
+                Navigator.Navigate(this, new RoomListForm(userId));
             }
             catch
             {
