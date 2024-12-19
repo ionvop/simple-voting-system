@@ -186,6 +186,7 @@ namespace _20241008
             {
                 MessageBox.Show(err.Message);
             }
+
             pnlManageRoom.BackgroundImage = Properties.Resources.active;
             pnlManageRoom.BackgroundImageLayout = ImageLayout.Stretch;
 
