@@ -275,9 +275,9 @@ namespace _20241008
                 int roomId = roomIds.ElementAt(listRooms.SelectedIndex);
                 Navigator.Navigate(this, new RoomForm(userId, roomId));
             }
-            catch (Exception err)
+            catch
             {
-                MessageBox.Show(err.Message);
+                MessageBox.Show("No room selected.");
             }
         }
 
@@ -288,9 +288,9 @@ namespace _20241008
                 int roomId = createdRoomIds.ElementAt(listCreatedRooms.SelectedIndex);
                 Navigator.Navigate(this, new RoomForm(userId, roomId));
             }
-            catch (Exception err)
+            catch
             {
-                MessageBox.Show(err.Message);
+                MessageBox.Show("No room selected.");
             }
         }
 
@@ -317,9 +317,9 @@ namespace _20241008
                 int roomId = reader.GetInt32(0);
                 Navigator.Navigate(this, new RoomForm(userId, roomId));
             }
-            catch (Exception err)
+            catch
             {
-                MessageBox.Show(err.StackTrace);
+                MessageBox.Show("Room does not exist or you're not authorized.");
             }
         }
 
@@ -368,9 +368,8 @@ namespace _20241008
                     this.Close();
                 }
             }
-            catch (Exception)
+            catch
             {
-
 
             }
 
